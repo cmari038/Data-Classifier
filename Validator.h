@@ -7,12 +7,18 @@ class Validator {
 
     private:
     Classifier* NN;
-    int rows = 0;
-    int columns = 0;
+    int rows;
+    int columns;
     vector<int> featureSubset;
     double dataSet[2048][64]; // maximum # of instances and features according to pdf
 
     public:
+
+    Validator() {
+        rows = 0;
+        columns = 0;
+        NN = new Classifier();
+    }
 
     
     void DataInput(const string& file) {
@@ -25,6 +31,7 @@ class Validator {
 
         if((info == 1 || info == 2) && columns != 0) {
             ++rows;
+            columns = 0;
         }
 
         dataSet[rows][columns] = info; 
@@ -33,6 +40,8 @@ class Validator {
     }
 
     FS.close();
+
+    ++rows;
 
     normalise();
 }
@@ -57,7 +66,7 @@ void normalise() {
 
     int counter = 0;
 
-    for(int j = 1; j <= columns; ++j) {
+    for(int j = 1; j <= columns-1; ++j) {
 
         for(int i = 0; i < rows; ++i) {
             std += pow(dataSet[i][j] - averages.at(counter), 2);
@@ -71,7 +80,7 @@ void normalise() {
 
     counter = 0;
 
-    for(int j = 1; j <= columns; ++j) {
+    for(int j = 1; j <= columns-1; ++j) {
 
         for(int i = 0; i < rows; ++i) {
            dataSet[i][j] = ( dataSet[i][j] - averages.at(counter) ) / deviations.at(counter);
@@ -88,31 +97,59 @@ void getTrainingData() {
     int counter = 0;
     vector<double> v;
 
-    while(featureID != 0) {
+    featureSubset.push_back(3);
+    featureSubset.push_back(5);
+    featureSubset.push_back(7);
+
+
+   /* while(featureID != 0) {
         cin >> featureID;
         featureSubset.push_back(featureID);
-    }
+    } */
 
-    for(int k = 0; k < featureSubset.size(); ++k) {
+    //cout << rows << " and " << columns << " and size " << featureSubset.size() << endl;
+
+   /* for(int k = 0; k < featureSubset.size(); ++k) {
+         
          for(int i = 0; i < rows; ++i) {
-            for(int j = 1; j <= columns-1; ++j) {
-                if(j == k) {
+            
+            for(int j = 0; j < columns; ++j) {
+
+                if(j == featureSubset.at(k)) {
                     v.push_back(dataSet[i][j]);
+                    cout << dataSet[i][j] << " ";
                 }
             }
 
+            cout << endl;
+
             NN->train(v);
         }
+    } */
+
+
+    for(int i = 0; i < rows; ++i) {
+
+        v.push_back(dataSet[i][0]);
+        
+        for(int j = 0; j < featureSubset.size(); ++j) {
+
+            v.push_back(dataSet[i][featureSubset.at(j)]);
+        }
+
+        NN->train(v);
+
+        v.clear();
     }
 }
 
-int classifierAccuracy() {
+double classifierAccuracy() {
 
     int correctClassification = 0;
-    //int NN_Label;
     int correctLabel;
 
     getTrainingData();
+    //cout << NN->getSize() << endl;
 
     for(int i = 0; i < rows; ++i) {
         
@@ -123,7 +160,18 @@ int classifierAccuracy() {
         }
     }
 
-    return correctClassification / rows;
+    return correctClassification / static_cast<double>(rows);
+}
+
+void print() {
+    
+    for(int i = 0; i < rows; ++i) {
+        for(int j = 0; j < columns; ++j) {
+            cout << dataSet[i][j] << " ";
+        }
+
+        cout << endl;
+    }
 }
 
 
