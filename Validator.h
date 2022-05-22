@@ -14,10 +14,14 @@ class Validator {
 
     public:
 
-    Validator() {
+    Validator(vector<int>& v) {
         rows = 0;
         columns = 0;
         NN = new Classifier();
+
+        for(int i = 0; i < v.size(); ++i) {
+            featureSubset.push_back(v.at(i));
+        }
     }
 
     
@@ -97,10 +101,6 @@ void getTrainingData() {
     int counter = 0;
     vector<double> v;
 
-    featureSubset.push_back(3);
-    featureSubset.push_back(5);
-    featureSubset.push_back(7);
-
     for(int i = 0; i < rows; ++i) {
 
         v.push_back(dataSet[i][0]);
@@ -132,11 +132,9 @@ double classifierAccuracy() {
         if(NN->test(i) == correctLabel) {
             ++correctClassification;
         }
-
-        else {
-            cout << "Wrong Label: " << i+1 << " " << NN->test(i) << " Correction: " << correctLabel << endl;
-        }
     }
+
+    cout << "Accuracy: ";
 
     return correctClassification / static_cast<double>(rows);
 }

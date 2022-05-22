@@ -73,7 +73,10 @@ double test(int test) {
     double label;
 
     for(int i = 0; i < trainingData.size(); ++i) {
+       
         if(i != test) { 
+
+             cout << "Ask if " << test << " is nearest neighbor with " << i << endl;
             
             for(int j = 1; j < trainingColumn; ++j) {
                  distance += pow(trainingData.at(test).at(j) - trainingData.at(i).at(j), 2);
