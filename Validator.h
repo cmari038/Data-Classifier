@@ -106,7 +106,25 @@ void getTrainingData() {
     }
 }
 
-int classifierAccuracy();
+int classifierAccuracy() {
+
+    int correctClassification = 0;
+    //int NN_Label;
+    int correctLabel;
+
+    getTrainingData();
+
+    for(int i = 0; i < rows; ++i) {
+        
+        correctLabel = dataSet[i][0];
+        
+        if(NN->test(i) == correctLabel) {
+            ++correctClassification;
+        }
+    }
+
+    return correctClassification / rows;
+}
 
 
 };

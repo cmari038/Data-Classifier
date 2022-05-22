@@ -44,6 +44,8 @@ int test(int test) {
 
         }
     }
+
+    return label;
 }
 
 
