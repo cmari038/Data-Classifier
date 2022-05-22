@@ -43,10 +43,10 @@ class Validator {
 
     ++rows;
 
-    normalise();
+    //normalise();
 }
 
-void normalise() {
+ void normalise() {
 
     double mean = 0;
     double std = 0;
@@ -72,7 +72,7 @@ void normalise() {
             std += pow(dataSet[i][j] - averages.at(counter), 2);
         }
 
-       deviations.push_back(std/(rows - 1));
+       deviations.push_back(sqrt(std/(rows - 1)));
        std = 0;
        ++counter;
     }
@@ -89,7 +89,7 @@ void normalise() {
        ++counter;
     }
 
-}
+} 
 
 void getTrainingData() {
 
@@ -100,33 +100,6 @@ void getTrainingData() {
     featureSubset.push_back(3);
     featureSubset.push_back(5);
     featureSubset.push_back(7);
-
-
-   /* while(featureID != 0) {
-        cin >> featureID;
-        featureSubset.push_back(featureID);
-    } */
-
-    //cout << rows << " and " << columns << " and size " << featureSubset.size() << endl;
-
-   /* for(int k = 0; k < featureSubset.size(); ++k) {
-         
-         for(int i = 0; i < rows; ++i) {
-            
-            for(int j = 0; j < columns; ++j) {
-
-                if(j == featureSubset.at(k)) {
-                    v.push_back(dataSet[i][j]);
-                    cout << dataSet[i][j] << " ";
-                }
-            }
-
-            cout << endl;
-
-            NN->train(v);
-        }
-    } */
-
 
     for(int i = 0; i < rows; ++i) {
 
@@ -149,7 +122,8 @@ double classifierAccuracy() {
     int correctLabel;
 
     getTrainingData();
-    //cout << NN->getSize() << endl;
+    NN -> normalize();
+    //NN -> print();
 
     for(int i = 0; i < rows; ++i) {
         
@@ -158,12 +132,16 @@ double classifierAccuracy() {
         if(NN->test(i) == correctLabel) {
             ++correctClassification;
         }
+
+        else {
+            cout << "Wrong Label: " << i+1 << " " << NN->test(i) << " Correction: " << correctLabel << endl;
+        }
     }
 
     return correctClassification / static_cast<double>(rows);
 }
 
-void print() {
+/*void print() {
     
     for(int i = 0; i < rows; ++i) {
         for(int j = 0; j < columns; ++j) {
@@ -172,7 +150,7 @@ void print() {
 
         cout << endl;
     }
-}
+} */
 
 
 };

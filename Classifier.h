@@ -21,45 +21,90 @@ Classifier() {
     trainingColumn = 0;
 }
 
+void normalize() {
+
+    double mean = 0;
+    double std = 0;
+    vector<double> averages;
+    vector<double> deviations;
+    int counter = 0;
+
+    //cout << trainingData.size() << " " << trainingColumn << endl;
+
+    for(int j = 1; j < trainingColumn; ++j) {
+
+        for(int i = 0; i < trainingData.size(); ++i) {
+            mean = mean + trainingData.at(i).at(j);
+        }
+
+       averages.push_back(mean/trainingData.size());
+       mean = 0;
+    }
+
+    for(int j = 1; j < trainingColumn; ++j) {
+
+        for(int i = 0; i < trainingData.size(); ++i) {
+            std += pow(trainingData.at(i).at(j) - averages.at(j-1), 2);
+        }
+
+        deviations.push_back(sqrt( std / (trainingData.size() - 1) ));
+        std = 0;
+    }
+
+    for(int j = 1; j < trainingColumn; ++j) {
+
+        for(int i = 0; i < trainingData.size(); ++i) {
+           trainingData.at(i).at(j) = ( trainingData.at(i).at(j) - averages.at(j-1) ) / deviations.at(j-1);
+        }
+    }
+
+} 
+
 void train(vector<double>& instance) {
-    //cout << instance.size() << endl;
     trainingColumn = instance.size();
     trainingData.push_back(instance);
 }
 
 
-int test(int test) {
+double test(int test) {
 
     double distance = 0;
     double minDistance = 0;
-    int label;
-
-    //cout << "Testing with training data of size:" << trainingColumn << endl;
+    double label;
 
     for(int i = 0; i < trainingData.size(); ++i) {
         if(i != test) { 
             
-            for(int j = 1; j <= trainingColumn-1; ++j) {
+            for(int j = 1; j < trainingColumn; ++j) {
+                 distance += pow(trainingData.at(test).at(j) - trainingData.at(i).at(j), 2);
+            }
 
-               distance += sqrt(pow(trainingData.at(test).at(j) - trainingData.at(i).at(j), 2)); 
+            distance = sqrt(distance);
+
+            if(minDistance == 0) {
+                minDistance = distance;
+            }
             
-                if(minDistance < distance) {
+            else if(distance < minDistance) {
                     minDistance = distance;
                     label = trainingData.at(i).at(0);
                 }
-            }
-
         }
 
         distance = 0;
     }
 
-   // cout << label << endl;
     return label;
 }
 
-int getSize() {
-    return trainingColumn;
+void print() {
+    for(int i = 0; i < trainingData.size(); ++i) {
+        for(int j = 0; j < trainingColumn; ++j) {
+            cout << trainingData.at(i).at(j) << " ";
+        }
+
+        cout << endl;
+    }
 }
 
 

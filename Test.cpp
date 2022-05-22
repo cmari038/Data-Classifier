@@ -9,9 +9,12 @@ int main() {
 
     validity->DataInput("small-test-dataset.txt");
 
-    //validity->print();
-
     cout << validity->classifierAccuracy() << endl;
+
+    Validator* v2 = new Validator();
+
+    v2->DataInput("Large-test-dataset.txt");
+    cout << v2->classifierAccuracy() << endl;
 
 
 
