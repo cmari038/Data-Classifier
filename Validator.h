@@ -6,7 +6,7 @@
 class Validator {
 
     private:
-    Classifier* NN;
+    Classifier* NN; // validator will have classifier input as a data member pointer
     int rows;
     int columns;
     vector<int> featureSubset;
@@ -14,7 +14,7 @@ class Validator {
 
     public:
 
-    Validator(vector<int>& v) {
+    Validator(vector<int>& v) {     // constructor which takes in a subset of features
         rows = 0;
         columns = 0;
         NN = new Classifier();
@@ -25,7 +25,7 @@ class Validator {
     }
 
     
-    void DataInput(const string& file) {
+    void DataInput(const string& file) {    // gets dataset as input
     
     double info;
     ifstream FS; 
@@ -46,56 +46,9 @@ class Validator {
     FS.close();
 
     ++rows;
-
-    //normalise();
 }
 
- void normalise() {
-
-    double mean = 0;
-    double std = 0;
-    vector<double> averages;
-    vector<double> deviations;
-
-    for(int j = 1; j <= columns-1; ++j) {
-
-        for(int i = 0; i < rows; ++i) {
-            mean += dataSet[i][j];
-        }
-
-        averages.push_back(mean/rows);
-        mean = 0;
-    }
-
-
-    int counter = 0;
-
-    for(int j = 1; j <= columns-1; ++j) {
-
-        for(int i = 0; i < rows; ++i) {
-            std += pow(dataSet[i][j] - averages.at(counter), 2);
-        }
-
-       deviations.push_back(sqrt(std/(rows - 1)));
-       std = 0;
-       ++counter;
-    }
-
-
-    counter = 0;
-
-    for(int j = 1; j <= columns-1; ++j) {
-
-        for(int i = 0; i < rows; ++i) {
-           dataSet[i][j] = ( dataSet[i][j] - averages.at(counter) ) / deviations.at(counter);
-        }
-
-       ++counter;
-    }
-
-} 
-
-void getTrainingData() {
+void getTrainingData() {    // gets training data and puts into classifier
 
     int featureID = 1;
     int counter = 0;
@@ -116,7 +69,7 @@ void getTrainingData() {
     }
 }
 
-double classifierAccuracy() {
+double classifierAccuracy() {   // performs K-fold validation function
 
     int correctClassification = 0;
     int correctLabel;

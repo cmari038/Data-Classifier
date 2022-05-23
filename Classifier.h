@@ -10,8 +10,8 @@ class Classifier {
 
 private:
 
-int trainingColumn;
-vector< vector<double> > trainingData;
+int trainingColumn;     // size of each vector in training data
+vector< vector<double> > trainingData;  // stores training data
 
 
 
@@ -21,7 +21,7 @@ Classifier() {
     trainingColumn = 0;
 }
 
-void normalize() {
+void normalize() {      // normalizes training data by finding mean and standard deviation
 
     double mean = 0;
     double std = 0;
@@ -30,6 +30,8 @@ void normalize() {
     int counter = 0;
 
     //cout << trainingData.size() << " " << trainingColumn << endl;
+
+    // mean
 
     for(int j = 1; j < trainingColumn; ++j) {
 
@@ -41,6 +43,8 @@ void normalize() {
        mean = 0;
     }
 
+    // standard deviation
+
     for(int j = 1; j < trainingColumn; ++j) {
 
         for(int i = 0; i < trainingData.size(); ++i) {
@@ -51,6 +55,8 @@ void normalize() {
         std = 0;
     }
 
+    // normalization
+
     for(int j = 1; j < trainingColumn; ++j) {
 
         for(int i = 0; i < trainingData.size(); ++i) {
@@ -60,13 +66,15 @@ void normalize() {
 
 } 
 
-void train(vector<double>& instance) {
+void train(vector<double>& instance) {  // train method which takes in an instance and adds it to vector data member
     trainingColumn = instance.size();
     trainingData.push_back(instance);
 }
 
 
-double test(int test) {
+double test(int test) {     // test method which labels a training instance based on indicated index
+
+// based off algorithm in discussion slides
 
     double distance = 0;
     double minDistance = 0;
@@ -100,7 +108,7 @@ double test(int test) {
     return label;
 }
 
-void print() {
+/* void print() {
     for(int i = 0; i < trainingData.size(); ++i) {
         for(int j = 0; j < trainingColumn; ++j) {
             cout << trainingData.at(i).at(j) << " ";
@@ -108,7 +116,7 @@ void print() {
 
         cout << endl;
     }
-}
+} */
 
 
 };
