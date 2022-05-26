@@ -2,15 +2,15 @@
 #define FEATURE_H
 #include <iostream>
 #include <vector>
+#include "Validator.h"
 using namespace std;
 
 class Feature {
 
 private:
-int accuracy;
+double accuracy;
 vector<int> features; 
-int vector_size;
-
+int vector_size;    // keeps track of size of vector
 
 public:
 
@@ -28,11 +28,11 @@ Feature(int featuresCount) {        // constructor used for seocnd choice where 
     accuracy = 0;
 }
 
-void setAccuracy(int a) {
-   accuracy = a;
+void setAccuracy(double val) {
+   accuracy = val;
 }
 
-int getAccuracy() {
+double getAccuracy() {
     return accuracy;
 }
 
@@ -72,8 +72,12 @@ void print(int v) {     // prints out feature set of vector
     cout << "{";   
     for(unsigned i = 0; i < features.size(); ++i) {
         cout << features.at(i);
+
+        if(i != features.size() - 1) {
+            cout << ",";
+        }
     }
-    cout << "} ";
+    cout << "}";
 
     if(v == 1) {
         cout << "accuracy is " << accuracy << "%" << endl; 
@@ -94,12 +98,18 @@ Feature* duplicate() {      // returns a copy of a Feature object
 
     else {
         Feature* f = new Feature();
+
         for(unsigned i = 0; i < features.size(); ++i) {
             f->Insert(features.at(i));
         }
+
         f->setAccuracy(accuracy);
         return f;
     }
+}
+
+void getSubset(Validator* v) {  // gets feature subset
+    v->SubsetInput(features);
 }
 
 

@@ -1,7 +1,7 @@
 #ifndef VALIDATOR_H
 #define VALIDATOR_H
 #include "Classifier.h"
-#include "Feature.h"
+#include <vector>
 
 class Validator {
 
@@ -14,16 +14,16 @@ class Validator {
 
     public:
 
-    Validator(vector<int>& v) {     // constructor which takes in a subset of features
+    Validator() {     // constructor which takes in a subset of features
         rows = 0;
         columns = 0;
         NN = new Classifier();
-
-        for(int i = 0; i < v.size(); ++i) {
-            featureSubset.push_back(v.at(i));
-        }
     }
 
+    
+    void EmptyVector() {
+        featureSubset.clear();
+    }
     
     void DataInput(const string& file) {    // gets dataset as input
     
@@ -46,11 +46,12 @@ class Validator {
     FS.close();
 
     ++rows;
+
+    normalize();
 }
 
 void getTrainingData() {    // gets training data and puts into classifier
 
-    int featureID = 1;
     int counter = 0;
     vector<double> v;
 
@@ -63,22 +64,23 @@ void getTrainingData() {    // gets training data and puts into classifier
             v.push_back(dataSet[i][featureSubset.at(j)]);
         }
 
+       // NN->emptyVector();
+
         NN->train(v);
 
         v.clear();
     }
 }
 
-double classifierAccuracy() {   // performs K-fold validation function
+double classifierAccuracy() {   // performs leave one out validation and finds accuracy of NN
 
     int correctClassification = 0;
     int correctLabel;
 
     getTrainingData();
-    NN -> normalize();
-    //NN -> print();
+    //NN -> normalize();
 
-    for(int i = 0; i < rows; ++i) {
+    for(int i = 0; i < rows; ++i) {     // finds label of each object in dataset 
         
         correctLabel = dataSet[i][0];
         
@@ -87,21 +89,90 @@ double classifierAccuracy() {   // performs K-fold validation function
         }
     }
 
-    cout << "Accuracy: ";
+    NN->emptyVector();  // empty classifier's data for next instance to test
 
-    return correctClassification / static_cast<double>(rows);
+    return (correctClassification / static_cast<double>(rows)) * 100;
 }
 
-/*void print() {
-    
-    for(int i = 0; i < rows; ++i) {
-        for(int j = 0; j < columns; ++j) {
-            cout << dataSet[i][j] << " ";
+void SubsetInput(vector<int>& v) {
+      for(int i = 0; i < v.size(); ++i) {
+            featureSubset.push_back(v.at(i));
+        }
+}
+
+int numFeatures() {
+    return columns - 1;
+}
+
+int numInstances() {
+    return rows;
+}
+
+
+void normalize() {      // normalizes training data by finding mean and standard deviation
+
+    double mean = 0;
+    double std = 0;
+    vector<double> averages;
+    vector<double> deviations;
+
+    // mean
+
+    for(int j = 1; j < columns; ++j) {
+
+        for(int i = 0; i < rows; ++i) {
+            mean = mean + dataSet[i][j];
         }
 
-        cout << endl;
+       averages.push_back(mean/rows);
+       mean = 0;
     }
-} */
+
+    // standard deviation
+
+    for(int j = 1; j < columns; ++j) {
+
+        for(int i = 0; i < rows; ++i) {
+            std += pow(dataSet[i][j] - averages.at(j-1), 2);
+        }
+
+        deviations.push_back(sqrt( std / (rows - 1) ));
+        std = 0;
+    }
+
+    // normalization
+
+    for(int j = 1; j < columns; ++j) {
+
+        for(int i = 0; i < rows; ++i) {
+           dataSet[i][j] = ( dataSet[i][j] - averages.at(j-1) ) / deviations.at(j-1);
+        }
+    }
+
+}
+
+double defaultRate() {
+    double counter1 = 0;
+    double counter2 = 0;
+
+    for(int i = 0; i < rows; ++i) {
+        if(dataSet[i][0] == 1) {
+            ++counter1;
+        }
+
+        else if(dataSet[i][0] == 2) {
+            ++counter2;
+        }
+    }
+
+    if(counter1 >= counter2) {
+        return (counter1 / static_cast<double>(rows)) * 100;
+    }
+
+    else {
+         return (counter2 / static_cast<double>(rows)) * 100;
+    }
+}
 
 
 };

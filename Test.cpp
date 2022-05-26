@@ -1,37 +1,41 @@
 #include "Validator.h"
 #include <iostream>
 #include "Feature.h"
-#include "Classifier.h"
 #include <vector>
 using namespace std;
 
 int main() {
 
-    vector<int> inputs; // input will be switched with feature class
+   Feature* inputs = new Feature(); // input will be switched with feature class
 
-    inputs.push_back(3);
-    inputs.push_back(5);
-    inputs.push_back(7);
+    inputs->Insert(3);
+    inputs->Insert(5);
+    inputs->Insert(7);
     
-    Validator* validity = new Validator(inputs);
+    Validator* validity = new Validator();
 
     validity->DataInput("small-test-dataset.txt");
 
-    cout << validity->classifierAccuracy() << endl;
+    inputs->getSubset(validity);
+    inputs->setAccuracy(validity->classifierAccuracy());
 
-    vector<int> inputs2;
+    cout << inputs->getAccuracy() << endl;
 
-    inputs2.push_back(1);
-    inputs2.push_back(15);
-    inputs2.push_back(27);
+    Feature* inputs2 = new Feature();
+
+    inputs2->Insert(1);
+    inputs2->Insert(15);
+    inputs2->Insert(27);
 
 
-    Validator* v2 = new Validator(inputs2);
+    Validator* v2 = new Validator();
 
     v2->DataInput("Large-test-dataset.txt");
-    cout << "Accuracy: " << v2->classifierAccuracy() << endl; 
+    inputs2->getSubset(v2);
+    inputs2->setAccuracy(v2->classifierAccuracy());
+    cout << inputs2->getAccuracy() << endl;    
 
 
 
-    return 0;
+    return 0; 
 }

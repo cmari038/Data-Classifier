@@ -1,8 +1,9 @@
 #ifndef Classifier_h
 #define Classifier_h
 #include <iostream>
-#include "Feature.h"
+//#include "Feature.h"
 #include <fstream>
+#include <vector>
 #include <cmath>
 using namespace std;
 
@@ -21,51 +22,6 @@ Classifier() {
     trainingColumn = 0;
 }
 
-void normalize() {      // normalizes training data by finding mean and standard deviation
-
-    double mean = 0;
-    double std = 0;
-    vector<double> averages;
-    vector<double> deviations;
-    int counter = 0;
-
-    //cout << trainingData.size() << " " << trainingColumn << endl;
-
-    // mean
-
-    for(int j = 1; j < trainingColumn; ++j) {
-
-        for(int i = 0; i < trainingData.size(); ++i) {
-            mean = mean + trainingData.at(i).at(j);
-        }
-
-       averages.push_back(mean/trainingData.size());
-       mean = 0;
-    }
-
-    // standard deviation
-
-    for(int j = 1; j < trainingColumn; ++j) {
-
-        for(int i = 0; i < trainingData.size(); ++i) {
-            std += pow(trainingData.at(i).at(j) - averages.at(j-1), 2);
-        }
-
-        deviations.push_back(sqrt( std / (trainingData.size() - 1) ));
-        std = 0;
-    }
-
-    // normalization
-
-    for(int j = 1; j < trainingColumn; ++j) {
-
-        for(int i = 0; i < trainingData.size(); ++i) {
-           trainingData.at(i).at(j) = ( trainingData.at(i).at(j) - averages.at(j-1) ) / deviations.at(j-1);
-        }
-    }
-
-} 
-
 void train(vector<double>& instance) {  // train method which takes in an instance and adds it to vector data member
     trainingColumn = instance.size();
     trainingData.push_back(instance);
@@ -79,18 +35,21 @@ double test(int test) {     // test method which labels a training instance base
     double distance = 0;
     double minDistance = 0;
     double label;
+    int neighbor;
 
     for(int i = 0; i < trainingData.size(); ++i) {
        
-        if(i != test) { 
+        if(i != test) {
 
-             cout << "Ask if " << test << " is nearest neighbor with " << i << endl;
+           // ++objects; 
+
+           //  cout << "Ask if " << test << " is nearest neighbor with " << i << endl;
             
             for(int j = 1; j < trainingColumn; ++j) {
-                 distance += pow(trainingData.at(test).at(j) - trainingData.at(i).at(j), 2);
+                 distance += pow(trainingData.at(test).at(j) - trainingData.at(i).at(j), 2);    // gets distance = (feature_test - feature_j)^2
             }
 
-            distance = sqrt(distance);
+            distance = sqrt(distance);  // distance = square root(distance)
 
             if(minDistance == 0) {
                 minDistance = distance;
@@ -99,6 +58,8 @@ double test(int test) {     // test method which labels a training instance base
             else if(distance < minDistance) {
                     minDistance = distance;
                     label = trainingData.at(i).at(0);
+                    neighbor = i;
+                   // ++closestObjects;
                 }
         }
 
@@ -108,15 +69,10 @@ double test(int test) {     // test method which labels a training instance base
     return label;
 }
 
-/* void print() {
-    for(int i = 0; i < trainingData.size(); ++i) {
-        for(int j = 0; j < trainingColumn; ++j) {
-            cout << trainingData.at(i).at(j) << " ";
-        }
-
-        cout << endl;
-    }
-} */
+void emptyVector() {
+    trainingData.clear();
+    trainingColumn = 0;
+}
 
 
 };
