@@ -21,11 +21,11 @@ class Validator {
     }
 
     
-    void EmptyVector() {
+    void EmptyVector() {    // clears vector for next subset
         featureSubset.clear();
     }
     
-    void DataInput(const string& file) {    // gets dataset as input
+    void DataInput(const string& file) {    // gets dataset as input from textfile
     
     double info;
     ifstream FS; 
@@ -46,8 +46,6 @@ class Validator {
     FS.close();
 
     ++rows;
-
-    normalize();
 }
 
 void getTrainingData() {    // gets training data and puts into classifier
@@ -77,8 +75,11 @@ double classifierAccuracy() {   // performs leave one out validation and finds a
     int correctClassification = 0;
     int correctLabel;
 
+    if(featureSubset.size() == 0) {
+        return defaultRate();
+    }
+
     getTrainingData();
-    //NN -> normalize();
 
     for(int i = 0; i < rows; ++i) {     // finds label of each object in dataset 
         
@@ -89,7 +90,7 @@ double classifierAccuracy() {   // performs leave one out validation and finds a
         }
     }
 
-    NN->emptyVector();  // empty classifier's data for next instance to test
+    NN->emptyVector();  // empty classifier's data for next set of data to test
 
     return (correctClassification / static_cast<double>(rows)) * 100;
 }
@@ -151,7 +152,7 @@ void normalize() {      // normalizes training data by finding mean and standard
 
 }
 
-double defaultRate() {
+double defaultRate() {  // calculates default rate
     double counter1 = 0;
     double counter2 = 0;
 

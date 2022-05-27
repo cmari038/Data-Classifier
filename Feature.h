@@ -42,7 +42,7 @@ void Insert(int val) {  // adds new feature to vector
     ++vector_size;
 }
 
-void Remove(int val) {
+void Remove(int val) {  // removes feature from subset
     vector<int>::iterator i; // iterators learned from geeksforgeeks
     for(i = features.begin(); i <= features.end(); ++i) {
         if(*i == val) {
@@ -69,22 +69,22 @@ bool empty(int val) {   // checks to see if feature is in vector set
 
 void print(int v) {     // prints out feature set of vector
 
-    cout << "{";   
+    std::cout << "{";   
     for(unsigned i = 0; i < features.size(); ++i) {
-        cout << features.at(i);
+        std::cout << features.at(i);
 
         if(i != features.size() - 1) {
-            cout << ",";
+            std::cout << ",";
         }
     }
-    cout << "}";
+    std::cout << "} ";
 
     if(v == 1) {
-        cout << "accuracy is " << accuracy << "%" << endl; 
+        std::cout << "accuracy is " << accuracy << "%" << endl; 
     }
 
     else if(v == 2){
-        cout << "was best, " << "accuracy is " << accuracy << "%";
+        std::cout << "was best, " << "accuracy is " << accuracy << "%";
     }
 
     
@@ -103,13 +103,15 @@ Feature* duplicate() {      // returns a copy of a Feature object
             f->Insert(features.at(i));
         }
 
-        f->setAccuracy(accuracy);
+        //f->setAccuracy(accuracy);
         return f;
     }
 }
 
-void getSubset(Validator* v) {  // gets feature subset
+void getSubset(Validator* v) {  // sends feature subset to validator
+
     v->SubsetInput(features);
+
 }
 
 

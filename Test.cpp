@@ -6,7 +6,7 @@ using namespace std;
 
 int main() {
 
-   Feature* inputs = new Feature(); // input will be switched with feature class
+   Feature* inputs = new Feature(); // cpp file used for testing
 
     inputs->Insert(3);
     inputs->Insert(5);
@@ -15,6 +15,7 @@ int main() {
     Validator* validity = new Validator();
 
     validity->DataInput("small-test-dataset.txt");
+    validity->normalize();
 
     inputs->getSubset(validity);
     inputs->setAccuracy(validity->classifierAccuracy());
@@ -31,6 +32,7 @@ int main() {
     Validator* v2 = new Validator();
 
     v2->DataInput("Large-test-dataset.txt");
+    v2->normalize();
     inputs2->getSubset(v2);
     inputs2->setAccuracy(v2->classifierAccuracy());
     cout << inputs2->getAccuracy() << endl;    
