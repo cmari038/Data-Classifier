@@ -1,7 +1,6 @@
 #ifndef Classifier_h
 #define Classifier_h
 #include <iostream>
-//#include "Feature.h"
 #include <fstream>
 #include <vector>
 #include <cmath>
@@ -28,7 +27,7 @@ void train(vector<double>& instance) {  // train method which takes in an instan
 }
 
 
-double test(int test) {     // test method which labels a training instance based on indicated index
+double test(int index) {     // test method which labels a training instance based on indicated index
 
 // based off algorithm in discussion slides
 
@@ -39,14 +38,10 @@ double test(int test) {     // test method which labels a training instance base
 
     for(int i = 0; i < trainingData.size(); ++i) {
        
-        if(i != test) {
-
-           // ++objects; 
-
-           //  cout << "Ask if " << test << " is nearest neighbor with " << i << endl;
+        if(i != index) {
             
             for(int j = 1; j < trainingColumn; ++j) {
-                 distance += pow(trainingData.at(test).at(j) - trainingData.at(i).at(j), 2);    // gets distance = (feature_test - feature_j)^2
+                 distance += pow(trainingData.at(index).at(j) - trainingData.at(i).at(j), 2);    // gets distance = (feature_test - feature_j)^2
             }
 
             distance = sqrt(distance);  // distance = square root(distance)
@@ -59,7 +54,6 @@ double test(int test) {     // test method which labels a training instance base
                     minDistance = distance;
                     label = trainingData.at(i).at(0);
                     neighbor = i;
-                   // ++closestObjects;
                 }
         }
 

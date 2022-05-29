@@ -62,8 +62,6 @@ void getTrainingData() {    // gets training data and puts into classifier
             v.push_back(dataSet[i][featureSubset.at(j)]);
         }
 
-       // NN->emptyVector();
-
         NN->train(v);
 
         v.clear();

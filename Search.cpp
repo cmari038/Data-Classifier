@@ -6,20 +6,20 @@
 #include <vector>
 //using namespace std;
 
-bool AccuracyComparison(Feature* feature1, Feature* feature2) { // comparator used to help sort vector of feature subsets
+bool AccuracyComparison(Feature* feature1, Feature* feature2) { // comparator used to help sort vector of all feature subsets
     return feature1->getAccuracy() < feature2->getAccuracy();
 }
 
-// Large-test-dataset.txt       Forward Elimination ({27,1} = 95.4%), Backward Elimination ({27} = 84.7%)
-// small-test-dataset.txt      Forward Elimination ({5,3} = 92%), Backward Elimination ({4,5,7,8,9,10} = 80%)
-// CS170_Spring_2022_Large_data__140.txt   Forward Elimination ({17,10} = 97.2%), Backward Elimination( {17} = 86.2%)
-// CS170_Spring_2022_Small_data__140.txt    Forward Elimination ((9,7,1) = 93%), Backward Elimination ({7,9}) = 93%
+// Large-test-dataset.txt       Forward Selection ({27,1} = 95.4%), Backward Elimination ({27} = 84.7%)
+// small-test-dataset.txt      Forward Selection ({5,3} = 92%), Backward Elimination ({4,5,7,8,9,10} = 80%)
+// CS170_Spring_2022_Large_data__140.txt   Forward Selection ({17,10} = 97.2%), Backward Elimination( {17} = 86.2%)
+// CS170_Spring_2022_Small_data__140.txt    Forward Selection ((9,7,1) = 93%), Backward Elimination ({7,9}) = 93%
 
 int main() {
-   Feature* F; // used to store feature subset with highest accuracy
+   Feature* F; // used to store feature obect that contains subset with highest accuracy
    Feature* holder;
    Validator* valid = new Validator();
-   vector<Feature*> features; 
+   vector<Feature*> features; // stores all feature objects with highest accuracy subsets.
    int numFeatures; 
    int choice;
    double Accuracy = 0; 
@@ -52,7 +52,7 @@ int main() {
    if(choice == 1) {
 
        F = new Feature(); // initial state with features
-       std::cout << "Running nearest neighbor with no features(default rate), using leave one out evaluation, I get an accuracy of " <<  valid -> defaultRate() << "%" << endl << endl << "Beginning Search" << endl << endl;
+       std::cout << "Running nearest neighbor with no features (default rate), using leaving-one-out evaluation, I get an accuracy of " <<  valid -> defaultRate() << "%" << endl << endl << "Beginning Search" << endl << endl;
 
        for(unsigned i = 1; i <= numFeatures; ++i) {
           Feature* feature;
@@ -81,10 +81,10 @@ int main() {
 
         F = holder; // set F equal to feature with highest accuracy
         features.push_back(F);      //add F to vector of all subsets 
-        std::cout << endl << "Feature Set";
+        std::cout << endl << "Feature Set ";
         features.back()->print(2);
         if(F->getAccuracy() < HighestAccuracy && HighestAccuracy != 0) {    // checks to see if the highest recorded accuracy of level is lower
-            std::cout << endl << "(Warning, accuracy has decreased!)";
+            std::cout << endl << "(Warning, accuracy has decreased! Continuing Search in case of local maxima)";
         }
 
         HighestAccuracy = F->getAccuracy();
@@ -99,7 +99,7 @@ int main() {
 
        F = new Feature(numFeatures);    // adds all features to F
        F->getSubset(valid);
-       std::cout << "Running nearest neighbr with all features and using leave one out evaluation, I get an accuracy of " << valid->classifierAccuracy() << "%" << endl << endl << "Beginning Search" << endl << endl;
+       std::cout << "Running nearest neighbor with all features and using leaving-one-out evaluation, I get an accuracy of " << valid->classifierAccuracy() << "%" << endl << endl << "Beginning Search" << endl << endl;
        valid->EmptyVector();
 
         for(unsigned i = 1; i <= numFeatures; ++i) {
@@ -128,10 +128,10 @@ int main() {
         
         F = holder;
         features.push_back(F);
-        std::cout << endl << "Feature Set";
+        std::cout << endl << "Feature Set ";
         features.back()->print(2);
         if(F->getAccuracy() < HighestAccuracy && HighestAccuracy != 0) {
-            std::cout << endl << "(Warning, accuracy has decreased!)";
+            std::cout << endl << "(Warning, accuracy has decreased! Continuing search in case of local maxima)";
         }
 
         HighestAccuracy = F->getAccuracy();

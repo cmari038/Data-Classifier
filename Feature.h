@@ -40,6 +40,7 @@ double getAccuracy() {
 void Insert(int val) {  // adds new feature to vector
     features.push_back(val);
     ++vector_size;
+    sort(features.begin(), features.end());
 }
 
 void Remove(int val) {  // removes feature from subset
@@ -50,6 +51,8 @@ void Remove(int val) {  // removes feature from subset
         }
     }
     --vector_size;
+
+     sort(features.begin(), features.end());
 }
 
 bool empty(int val) {   // checks to see if feature is in vector set
@@ -77,14 +80,14 @@ void print(int v) {     // prints out feature set of vector
             std::cout << ",";
         }
     }
-    std::cout << "} ";
+    std::cout << "}";
 
     if(v == 1) {
-        std::cout << "accuracy is " << accuracy << "%" << endl; 
+        std::cout << " accuracy is " << accuracy << "%" << endl; 
     }
 
     else if(v == 2){
-        std::cout << "was best, " << "accuracy is " << accuracy << "%";
+        std::cout << " was best, " << "accuracy is " << accuracy << "%";
     }
 
     
