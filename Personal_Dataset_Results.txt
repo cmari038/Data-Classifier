@@ -1,0 +1,7 @@
+DatasetID: 140
+Small Dataset Results:
+    Forward: Feature Subset: {1,7,9}, Acc: 0.93
+    Backward: Feature Subset: {7,9} Acc: 0.93
+Large Dataset Results:
+    Forward: Feature Subset: {10, 17}, Acc: 0.972
+    Backward: Feature Subset: {17}, Acc: 0.862
